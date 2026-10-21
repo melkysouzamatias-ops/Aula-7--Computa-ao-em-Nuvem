@@ -1,0 +1,11 @@
+O que muda ao usar Secret em vez de ConfigMap neste exemplo?
+A principal diferença é a natureza dos dados e o nível de segurança. Um ConfigMap armazena dados de configuração não confidenciais (em texto plano visível), enquanto um Secret é projetado especificamente para armazenar dados sensíveis (como senhas, tokens ou chaves), oferecendo ofuscação em base64 no Kubernetes e suporte a mecanismos de segurança adicionais (como criptografia em repouso no etcd, dependendo da configuração do cluster).   
+
+Qual objeto define get e list? Qual objeto entrega essas permissões à conta?
+O objeto que define os verbos (get e list) e os recursos permitidos é a Role (criada no Passo 6 como consulta-pods). O objeto responsável por associar (entregar) essas permissões da Role à identidade (ServiceAccount) é o RoleBinding (criado no Passo 7 como vinculo-leitor).   
+
+Por que delete pods retornou no?
+Retornou no porque a Role configurada no laboratório concedeu permissão estipulada apenas para os verbos get e list focados no recurso pods. Como o verbo delete não foi incluído na definição da Role, a conta não possui autorização para excluir pods, garantindo o princípio do privilégio mínimo.   
+
+Uma conta com essa Role poderia ler Secrets? Justifiquem.
+Não. A Role criada neste laboratório restringe explicitamente o escopo de recursos (--resource=pods) apenas aos pods. Para que a conta pudesse ler Secrets, seria necessário incluir o recurso secrets na definição da Role (ou criar uma nova Role com essa permissão).   
